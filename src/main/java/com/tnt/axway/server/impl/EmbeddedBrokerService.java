@@ -23,6 +23,7 @@ public class EmbeddedBrokerService implements Server {
 	private final BrokerService broker = new BrokerService();
 	private final File dataDirectory = new File("target/activeMQ_Directory");
 
+	private final Consumer consumer = new Consumer();
 	private final Logger LOG = Logger.getLogger(EmbeddedBrokerService.class);
 
 	public void start() {
@@ -33,6 +34,9 @@ public class EmbeddedBrokerService implements Server {
 			broker.setBrokerName("Track_Trace");
 			broker.start();
 			LOG.info("Server start");
+
+			consumer.setUp();
+			consumer.receiveMessage(null);
 		} catch (final Exception e) {
 			LOG.error(e.getMessage(), e);
 			throw new RuntimeException(e);
@@ -47,13 +51,15 @@ public class EmbeddedBrokerService implements Server {
 	}
 
 	public void stop() {
-		if (broker != null) {
-			try {
+
+		try {
+			consumer.shutDown();
+			if (broker != null) {
 				broker.stop();
-			} catch (final Exception e) {
-				LOG.error(e.getMessage(), e);
-				throw new RuntimeException(e);
 			}
+		} catch (final Exception e) {
+			LOG.error(e.getMessage(), e);
+			throw new RuntimeException(e);
 		}
 	}
 
