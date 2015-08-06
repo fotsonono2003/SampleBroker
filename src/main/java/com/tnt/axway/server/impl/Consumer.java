@@ -55,16 +55,14 @@ public class Consumer extends JMSClient<Author> implements MessageListener,
 	@Override
 	public void receiveMessage(final String correlationID) throws JMSException {
 		final Destination destination = session.createQueue(subject);
-		if (correlationID == null) {
-			final MessageConsumer receiver = getConsumer(destination,
-					correlationID == null ? null : "JMSCorrelationID='"
-							+ correlationID + "'");
+		final MessageConsumer receiver = getConsumer(destination,
+				correlationID == null ? null : "JMSCorrelationID='"
+						+ correlationID + "'");
 
-			receiver.setMessageListener(this);
-		}
+		receiver.setMessageListener(this);
 		getConnection().setExceptionListener(this);
 		getConnection().start();
-		// final Message message = receiver.receive();
+		LOG.info("Consumer is waiting for message");
 	}
 
 	public void receiveMessage() throws JMSException {
@@ -94,7 +92,7 @@ public class Consumer extends JMSClient<Author> implements MessageListener,
 				response.setJMSCorrelationID(message.getJMSCorrelationID());
 				reply(response);
 				message.acknowledge();
-				LOG.info("Response sent");
+				LOG.info("Response sent:" + response.getJMSCorrelationID());
 			} catch (final JMSException e) {
 				LOG.error(e.getMessage(), e);
 			}
@@ -116,7 +114,6 @@ public class Consumer extends JMSClient<Author> implements MessageListener,
 		final Consumer consumer = new Consumer();
 		consumer.setUp();
 		consumer.receiveMessage();
-		System.out.println("Consumer is working");
 	}
 
 }
