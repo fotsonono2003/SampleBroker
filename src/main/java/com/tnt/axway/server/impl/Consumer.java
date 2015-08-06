@@ -43,21 +43,10 @@ public class Consumer extends BaseConsumer<Author> implements MessageListener,
 				.createSession(false, Session.AUTO_ACKNOWLEDGE);
 	}
 
-	private MessageConsumer getConsumer(final Destination destination,
-			final String messageSelector) throws JMSException {
-		if (messageSelector == null) {
-			return session.createConsumer(destination);
-		} else {
-			return session.createConsumer(destination, messageSelector);
-		}
-	}
-
 	@Override
 	public void receiveMessage(final String correlationID) throws JMSException {
 		final Destination destination = session.createQueue(subject);
-		final MessageConsumer receiver = getConsumer(destination,
-				correlationID == null ? null : "JMSCorrelationID='"
-						+ correlationID + "'");
+		final MessageConsumer receiver = session.createConsumer(destination);
 
 		receiver.setMessageListener(this);
 		getConnection().setExceptionListener(this);
@@ -67,12 +56,6 @@ public class Consumer extends BaseConsumer<Author> implements MessageListener,
 
 	@Override
 	public String sendMessage(final Author object) throws JMSException {
-		final ObjectMessage message = session.createObjectMessage();
-		message.setObject("OK");
-		final Destination replyQueue = session.createQueue(OUT_QUEUE);
-		final MessageProducer replyProducer = session
-				.createProducer(replyQueue);
-		replyProducer.send(message);
 		return null;
 	}
 
@@ -85,7 +68,6 @@ public class Consumer extends BaseConsumer<Author> implements MessageListener,
 				final Message response = session.createObjectMessage("OK");
 				response.setJMSCorrelationID(message.getJMSCorrelationID());
 				reply(response);
-				LOG.info("Response sent:" + response.getJMSCorrelationID());
 			} catch (final JMSException e) {
 				LOG.error(e.getMessage(), e);
 			}
@@ -97,6 +79,7 @@ public class Consumer extends BaseConsumer<Author> implements MessageListener,
 		final MessageProducer replyProducer = session
 				.createProducer(replyQueue);
 		replyProducer.send(response);
+		LOG.info("Response sent:" + response.getJMSCorrelationID());
 	}
 
 	public void onException(final JMSException exception) {
