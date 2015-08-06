@@ -24,7 +24,7 @@ import org.apache.log4j.Logger;
 import com.tnt.axway.Author;
 
 public class ProducerWithouListener extends JMSClient<Author> implements
-		ExceptionListener {
+		ExceptionListener, Runnable {
 
 	private final static Logger LOG = Logger
 			.getLogger(ProducerWithouListener.class);
@@ -60,7 +60,7 @@ public class ProducerWithouListener extends JMSClient<Author> implements
 		final MessageConsumer receiver = getConsumer(destination,
 				correlationID == null ? null : "JMSCorrelationID='"
 						+ correlationID + "'");
-		final Message message = receiver.receive(2000);
+		final Message message = receiver.receive(4000);
 		if (message instanceof ObjectMessage) {
 			final ObjectMessage object = (ObjectMessage) message;
 			try {
@@ -99,6 +99,16 @@ public class ProducerWithouListener extends JMSClient<Author> implements
 		}
 		if (getConnection() != null) {
 			getConnection().close();
+		}
+	}
+
+	public void run() {
+		final Author author = new Author("author_Thread1");
+		try {
+			String correlationID = sendMessage(author);
+			receiveMessage(correlationID);
+		} catch (final JMSException e) {
+			LOG.error(e.getMessage(), e);
 		}
 	}
 
