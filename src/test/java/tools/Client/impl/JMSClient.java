@@ -44,9 +44,5 @@ public abstract class JMSClient<T extends Serializable>  {
 		return connection;
 	}
 
-	public void shutDown() throws JMSException {
-		if (connection != null) {
-			connection.close();
-		}
-	}
+	abstract public void shutDown() throws JMSException;
 }

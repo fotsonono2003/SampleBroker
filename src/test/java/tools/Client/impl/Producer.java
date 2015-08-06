@@ -75,7 +75,8 @@ public class Producer extends JMSClient<Author> implements ExceptionListener,
 		final MessageProducer producer = session.createProducer(destination);
 		producer.send(message);
 
-		LOG.info("Message: " + object.getName() + " has been sent to MOM");
+		LOG.info("Message sent: " + object.getName() + ", CorrelationID:"
+				+ message.getJMSCorrelationID());
 		return message.getJMSCorrelationID();
 	}
 
@@ -96,6 +97,16 @@ public class Producer extends JMSClient<Author> implements ExceptionListener,
 		}
 	}
 
+	@Override
+	public void shutDown() throws JMSException {
+		if (session != null) {
+			session.close();
+		}
+		if (getConnection() != null) {
+			getConnection().close();
+		}
+	}
+
 	public static void main(String[] args) throws JMSException {
 		final List<String> correlationIDs = new ArrayList<String>();
 		final Producer producer = new Producer();
@@ -109,4 +120,5 @@ public class Producer extends JMSClient<Author> implements ExceptionListener,
 		// }
 		// producer.shutDown();
 	}
+
 }

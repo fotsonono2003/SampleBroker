@@ -8,8 +8,6 @@
  */
 package tools.Client.impl;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 import javax.jms.Destination;
@@ -108,17 +106,23 @@ public class ProducerWithouListener extends JMSClient<Author> implements
 		}
 	}
 
+	@Override
+	public void shutDown() throws JMSException {
+		if (session != null) {
+			session.close();
+		}
+		if (getConnection() != null) {
+			getConnection().close();
+		}
+	}
+
 	public static void main(String[] args) throws JMSException {
-		final List<String> correlationIDs = new ArrayList<String>();
 		final ProducerWithouListener producer = new ProducerWithouListener();
 		producer.setUp();
-		for (int i = 0; i < 10; i++) {
-			final Author author = new Author("author_" + i);
-			correlationIDs.add(producer.sendMessage(author));
-		}
-		for (final String correlationID : correlationIDs) {
-			producer.receiveMessage(correlationID);
-		}
+		final Author author = new Author("author_");
+		String correlationID = producer.sendMessage(author);
+		producer.receiveMessage(correlationID);
 		producer.shutDown();
 	}
+
 }
