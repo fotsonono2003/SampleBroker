@@ -21,9 +21,9 @@ import javax.jms.Session;
 import org.apache.log4j.Logger;
 
 import com.tnt.axway.Author;
-import com.tnt.axway.server.JMSClient;
+import com.tnt.axway.server.BaseConsumer;
 
-public class Consumer extends JMSClient<Author> implements MessageListener,
+public class Consumer extends BaseConsumer<Author> implements MessageListener,
 		ExceptionListener {
 
 	private final Logger LOG = Logger.getLogger(Consumer.class);
@@ -80,8 +80,8 @@ public class Consumer extends JMSClient<Author> implements MessageListener,
 		if (message instanceof ObjectMessage) {
 			final ObjectMessage object = (ObjectMessage) message;
 			try {
-				LOG.info("Message received:" + message.toString()
-						+ ", content: " + object.getObject().toString());
+				LOG.info("Message received:" + message.toString());
+				LOG.info("Content: " + object.getObject().toString());
 				final Message response = session.createObjectMessage("OK");
 				response.setJMSCorrelationID(message.getJMSCorrelationID());
 				reply(response);

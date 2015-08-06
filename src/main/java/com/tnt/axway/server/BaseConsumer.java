@@ -15,18 +15,18 @@ import javax.jms.JMSException;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
 
-public abstract class JMSClient<T extends Serializable>  {
+public abstract class BaseConsumer<T extends Serializable>  {
 
 	private Connection connection;
 	protected String url = "tcp://127.0.0.1:61616";
 	protected final ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(
 			url);
 
-	public JMSClient(final String url) {
+	public BaseConsumer(final String url) {
 		this.url = url;
 	}
 
-	public JMSClient() {
+	public BaseConsumer() {
 	}
 
 	abstract public String sendMessage(final T object) throws JMSException;
