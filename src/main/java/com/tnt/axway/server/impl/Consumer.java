@@ -23,8 +23,8 @@ import org.apache.log4j.Logger;
 import com.tnt.axway.Author;
 import com.tnt.axway.server.JMSClient;
 
-public class Consumer extends JMSClient<Author> implements Runnable,
-		MessageListener, ExceptionListener {
+public class Consumer extends JMSClient<Author> implements MessageListener,
+		ExceptionListener {
 
 	private final Logger LOG = Logger.getLogger(Consumer.class);
 	private String subject = "authors";
@@ -106,16 +106,6 @@ public class Consumer extends JMSClient<Author> implements Runnable,
 		final MessageProducer replyProducer = session
 				.createProducer(replyQueue);
 		replyProducer.send(response);
-	}
-
-	public void run() {
-		// try {
-		// receiveMessage();
-		// while (true) {
-		// }
-		// } catch (final JMSException e) {
-		// LOG.error(e.getMessage(), e);
-		// }
 	}
 
 	public void onException(final JMSException exception) {
