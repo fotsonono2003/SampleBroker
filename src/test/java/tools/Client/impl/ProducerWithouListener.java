@@ -60,7 +60,7 @@ public class ProducerWithouListener extends JMSClient<Author> implements
 		final MessageConsumer receiver = getConsumer(destination,
 				correlationID == null ? null : "JMSCorrelationID='"
 						+ correlationID + "'");
-		final Message message = receiver.receive(3000);
+		final Message message = receiver.receive(2000);
 		if (message instanceof ObjectMessage) {
 			final ObjectMessage object = (ObjectMessage) message;
 			try {
@@ -83,27 +83,13 @@ public class ProducerWithouListener extends JMSClient<Author> implements
 		final MessageProducer producer = session.createProducer(destination);
 		producer.send(message);
 
-		LOG.info("Message: " + object.getName()
-				+ " has been sent to MOM, coorelationID:"
+		LOG.info("Message sent: " + object.getName() + ", correlationID:"
 				+ message.getJMSCorrelationID());
 		return message.getJMSCorrelationID();
 	}
 
 	public void onException(final JMSException exception) {
 		LOG.error(exception.getMessage(), exception);
-	}
-
-	public void onMessage(final Message message) {
-		if (message instanceof ObjectMessage) {
-			final ObjectMessage object = (ObjectMessage) message;
-			try {
-				LOG.info("Response received:" + object.getObject()
-						+ ", JMSCorrelationID:" + message.getJMSCorrelationID());
-				message.acknowledge();
-			} catch (final JMSException e) {
-				LOG.error(e.getMessage(), e);
-			}
-		}
 	}
 
 	@Override
@@ -119,7 +105,7 @@ public class ProducerWithouListener extends JMSClient<Author> implements
 	public static void main(String[] args) throws JMSException {
 		final ProducerWithouListener producer = new ProducerWithouListener();
 		producer.setUp();
-		final Author author = new Author("author_");
+		final Author author = new Author("author_111");
 		String correlationID = producer.sendMessage(author);
 		producer.receiveMessage(correlationID);
 		producer.shutDown();

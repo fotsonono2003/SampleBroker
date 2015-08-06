@@ -65,10 +65,6 @@ public class Consumer extends JMSClient<Author> implements MessageListener,
 		LOG.info("Consumer is waiting for message");
 	}
 
-	public void receiveMessage() throws JMSException {
-		receiveMessage(null);
-	}
-
 	@Override
 	public String sendMessage(final Author object) throws JMSException {
 		final ObjectMessage message = session.createObjectMessage();
@@ -84,10 +80,8 @@ public class Consumer extends JMSClient<Author> implements MessageListener,
 		if (message instanceof ObjectMessage) {
 			final ObjectMessage object = (ObjectMessage) message;
 			try {
-				System.out.println("Message received:" + object.getObject()
-						+ " with correlationID: "
-						+ message.getJMSCorrelationID());
-				LOG.info("Message received:" + message.toString());
+				LOG.info("Message received:" + message.toString()
+						+ ", content: " + object.getObject().toString());
 				final Message response = session.createObjectMessage("OK");
 				response.setJMSCorrelationID(message.getJMSCorrelationID());
 				reply(response);
@@ -113,7 +107,7 @@ public class Consumer extends JMSClient<Author> implements MessageListener,
 	public static void main(String[] args) throws JMSException {
 		final Consumer consumer = new Consumer();
 		consumer.setUp();
-		consumer.receiveMessage();
+		consumer.receiveMessage(null);
 	}
 
 }
