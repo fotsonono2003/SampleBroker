@@ -44,7 +44,7 @@ public class Producer extends JMSClient<Author> implements ExceptionListener,
 	public void setUp() throws JMSException {
 		getConnection().start();
 		session = getConnection().createSession(false,
-				Session.CLIENT_ACKNOWLEDGE);
+				Session.AUTO_ACKNOWLEDGE);
 	}
 
 	private MessageConsumer getConsumer(final Destination destination,
@@ -90,7 +90,6 @@ public class Producer extends JMSClient<Author> implements ExceptionListener,
 			try {
 				LOG.info("Response received:" + object.getObject()
 						+ ", JMSCorrelationID:" + message.getJMSCorrelationID());
-				message.acknowledge();
 			} catch (final JMSException e) {
 				LOG.error(e.getMessage(), e);
 			}

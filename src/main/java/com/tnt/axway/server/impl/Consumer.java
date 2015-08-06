@@ -39,8 +39,8 @@ public class Consumer extends BaseConsumer<Author> implements MessageListener,
 	}
 
 	public void setUp() throws JMSException {
-		session = getConnection().createSession(false,
-				Session.CLIENT_ACKNOWLEDGE);
+		session = getConnection()
+				.createSession(false, Session.AUTO_ACKNOWLEDGE);
 	}
 
 	private MessageConsumer getConsumer(final Destination destination,
@@ -85,7 +85,6 @@ public class Consumer extends BaseConsumer<Author> implements MessageListener,
 				final Message response = session.createObjectMessage("OK");
 				response.setJMSCorrelationID(message.getJMSCorrelationID());
 				reply(response);
-				message.acknowledge();
 				LOG.info("Response sent:" + response.getJMSCorrelationID());
 			} catch (final JMSException e) {
 				LOG.error(e.getMessage(), e);

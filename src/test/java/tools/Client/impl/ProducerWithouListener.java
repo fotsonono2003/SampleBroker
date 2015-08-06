@@ -41,8 +41,8 @@ public class ProducerWithouListener extends JMSClient<Author> implements
 
 	public void setUp() throws JMSException {
 		getConnection().start();
-		session = getConnection().createSession(false,
-				Session.CLIENT_ACKNOWLEDGE);
+		session = getConnection()
+				.createSession(false, Session.AUTO_ACKNOWLEDGE);
 	}
 
 	private MessageConsumer getConsumer(final Destination destination,
@@ -66,7 +66,6 @@ public class ProducerWithouListener extends JMSClient<Author> implements
 			try {
 				LOG.info("Response received:" + object.getObject()
 						+ ", JMSCorrelationID:" + message.getJMSCorrelationID());
-				message.acknowledge();
 			} catch (final JMSException e) {
 				LOG.error(e.getMessage(), e);
 			}
@@ -76,6 +75,7 @@ public class ProducerWithouListener extends JMSClient<Author> implements
 
 	@Override
 	public String sendMessage(final Author object) throws JMSException {
+		getConnection().setExceptionListener(this);
 		final Destination destination = session.createQueue(IN_QUEUE);
 		final Message message = session.createObjectMessage(object);
 		message.setJMSCorrelationID(UUID.randomUUID().toString());
