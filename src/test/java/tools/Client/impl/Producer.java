@@ -26,8 +26,8 @@ import org.apache.log4j.Logger;
 
 import com.tnt.axway.Author;
 
-public class Producer extends JMSClient<Author>
-		implements ExceptionListener, MessageListener {
+public class Producer extends JMSClient<Author> implements ExceptionListener,
+		MessageListener {
 
 	private final static Logger LOG = Logger.getLogger(Producer.class);
 	private final String IN_QUEUE = "authors";
@@ -104,7 +104,7 @@ public class Producer extends JMSClient<Author>
 			final Author author = new Author("author_" + i);
 			correlationIDs.add(producer.sendMessage(author));
 		}
-		// for (final String coorelationID : correlationIDs) {
+		// for (final String correlationID : correlationIDs) {
 		producer.receiveMessage(null);
 		// }
 		// producer.shutDown();
