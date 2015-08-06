@@ -6,7 +6,7 @@
  * this work may be reproduced or disseminated in any form or by any means,
  * without the prior written permission of Axway Software.
  */
-package tools.server.Client.impl;
+package com.tnt.axway.server.impl;
 
 import javax.jms.Destination;
 import javax.jms.ExceptionListener;
@@ -21,6 +21,7 @@ import javax.jms.Session;
 import org.apache.log4j.Logger;
 
 import com.tnt.axway.Author;
+import com.tnt.axway.server.JMSClient;
 
 public class Consumer extends JMSClient<Author> implements Runnable,
 		MessageListener, ExceptionListener {

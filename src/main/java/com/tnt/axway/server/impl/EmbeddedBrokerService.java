@@ -6,7 +6,7 @@
  * this work may be reproduced or disseminated in any form or by any means,
  * without the prior written permission of Axway Software.
  */
-package tools.server.impl;
+package com.tnt.axway.server.impl;
 
 import java.io.File;
 import java.net.URI;
@@ -16,7 +16,7 @@ import org.apache.activemq.broker.BrokerService;
 import org.apache.activemq.broker.TransportConnector;
 import org.apache.log4j.Logger;
 
-import tools.server.Server;
+import com.tnt.axway.server.Server;
 
 public class EmbeddedBrokerService implements Server {
 	private final String url = "tcp://127.0.0.1:61616";

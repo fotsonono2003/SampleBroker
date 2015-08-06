@@ -6,7 +6,7 @@
  * this work may be reproduced or disseminated in any form or by any means,
  * without the prior written permission of Axway Software.
  */
-package tools.server.Client.impl;
+package tools.Client.impl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,8 +26,8 @@ import org.apache.log4j.Logger;
 
 import com.tnt.axway.Author;
 
-public class Producer extends JMSClient<Author> implements ExceptionListener,
-		MessageListener {
+public class Producer extends JMSClient<Author>
+		implements ExceptionListener, MessageListener {
 
 	private final static Logger LOG = Logger.getLogger(Producer.class);
 	private final String IN_QUEUE = "authors";
@@ -107,6 +107,6 @@ public class Producer extends JMSClient<Author> implements ExceptionListener,
 		// for (final String coorelationID : correlationIDs) {
 		producer.receiveMessage(null);
 		// }
-		//producer.shutDown();
+		// producer.shutDown();
 	}
 }

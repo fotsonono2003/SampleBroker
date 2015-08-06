@@ -6,7 +6,7 @@
  * this work may be reproduced or disseminated in any form or by any means,
  * without the prior written permission of Axway Software.
  */
-package tools.server.Client.impl;
+package com.tnt.axway.server;
 
 import java.io.Serializable;
 
@@ -15,9 +15,7 @@ import javax.jms.JMSException;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
 
-import tools.server.Client.Client;
-
-public abstract class JMSClient<T extends Serializable> implements Client {
+public abstract class JMSClient<T extends Serializable>  {
 
 	private Connection connection;
 	protected String url = "tcp://127.0.0.1:61616";

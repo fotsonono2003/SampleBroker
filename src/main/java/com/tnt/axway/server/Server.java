@@ -6,7 +6,7 @@
  * this work may be reproduced or disseminated in any form or by any means,
  * without the prior written permission of Axway Software.
  */
-package tools.server;
+package com.tnt.axway.server;
 
 public interface Server {
 
