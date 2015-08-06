@@ -60,7 +60,7 @@ public class ProducerWithouListener extends JMSClient<Author> implements
 		final MessageConsumer receiver = getConsumer(destination,
 				correlationID == null ? null : "JMSCorrelationID='"
 						+ correlationID + "'");
-		final Message message = receiver.receive(4000);
+		final Message message = receiver.receive(2000);
 		if (message instanceof ObjectMessage) {
 			final ObjectMessage object = (ObjectMessage) message;
 			try {
