@@ -81,7 +81,7 @@ public class Consumer extends BaseConsumer<Author> implements MessageListener,
 			final ObjectMessage object = (ObjectMessage) message;
 			try {
 				LOG.info("Message received:" + message.toString());
-				LOG.info("Content: " + object.getObject().toString());
+				LOG.info("Content received: " + object.getObject().toString());
 				final Message response = session.createObjectMessage("OK");
 				response.setJMSCorrelationID(message.getJMSCorrelationID());
 				reply(response);
