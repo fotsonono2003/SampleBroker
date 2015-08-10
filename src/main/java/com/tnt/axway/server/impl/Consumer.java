@@ -20,10 +20,9 @@ import javax.jms.Session;
 
 import org.apache.log4j.Logger;
 
-import com.tnt.axway.Author;
 import com.tnt.axway.server.BaseConsumer;
 
-public class Consumer extends BaseConsumer<Author> implements MessageListener,
+public class Consumer extends BaseConsumer implements MessageListener,
 		ExceptionListener {
 
 	private final Logger LOG = Logger.getLogger(Consumer.class);
@@ -55,7 +54,7 @@ public class Consumer extends BaseConsumer<Author> implements MessageListener,
 	}
 
 	@Override
-	public String sendMessage(final Author object) throws JMSException {
+	public String sendMessage(final String object) throws JMSException {
 		return null;
 	}
 

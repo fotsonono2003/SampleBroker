@@ -24,9 +24,7 @@ import javax.jms.Session;
 
 import org.apache.log4j.Logger;
 
-import com.tnt.axway.Author;
-
-public class Producer extends JMSClient<Author> implements ExceptionListener,
+public class Producer extends JMSClient implements ExceptionListener,
 		MessageListener {
 
 	private final static Logger LOG = Logger.getLogger(Producer.class);
@@ -67,7 +65,7 @@ public class Producer extends JMSClient<Author> implements ExceptionListener,
 	}
 
 	@Override
-	public String sendMessage(final Author object) throws JMSException {
+	public String sendMessage(final String object) throws JMSException {
 		final Destination destination = session.createQueue(IN_QUEUE);
 		final Message message = session.createObjectMessage(object);
 		message.setJMSCorrelationID(UUID.randomUUID().toString());
@@ -75,7 +73,7 @@ public class Producer extends JMSClient<Author> implements ExceptionListener,
 		final MessageProducer producer = session.createProducer(destination);
 		producer.send(message);
 
-		LOG.info("Message sent: " + object.getName() + ", CorrelationID:"
+		LOG.info("Message sent: " + object+ ", CorrelationID:"
 				+ message.getJMSCorrelationID());
 		return message.getJMSCorrelationID();
 	}
@@ -111,8 +109,8 @@ public class Producer extends JMSClient<Author> implements ExceptionListener,
 		final Producer producer = new Producer();
 		producer.setUp();
 		for (int i = 20; i < 30; i++) {
-			final Author author = new Author("author_" + i);
-			correlationIDs.add(producer.sendMessage(author));
+			final String objectToSend = new String("author_" + i);
+			correlationIDs.add(producer.sendMessage(objectToSend));
 		}
 		// for (final String correlationID : correlationIDs) {
 		producer.receiveMessage(null);

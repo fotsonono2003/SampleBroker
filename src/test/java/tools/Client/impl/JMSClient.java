@@ -8,14 +8,12 @@
  */
 package tools.Client.impl;
 
-import java.io.Serializable;
-
 import javax.jms.Connection;
 import javax.jms.JMSException;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
 
-public abstract class JMSClient<T extends Serializable>  {
+public abstract class JMSClient {
 
 	private Connection connection;
 	protected String url = "tcp://127.0.0.1:61616";
@@ -29,9 +27,10 @@ public abstract class JMSClient<T extends Serializable>  {
 	public JMSClient() {
 	}
 
-	abstract public String sendMessage(final T object) throws JMSException;
+	abstract public String sendMessage(final String object) throws JMSException;
 
-	abstract public void receiveMessage(final String correlationID) throws JMSException;
+	abstract public void receiveMessage(final String correlationID)
+			throws JMSException;
 
 	public String getURL() {
 		return url;

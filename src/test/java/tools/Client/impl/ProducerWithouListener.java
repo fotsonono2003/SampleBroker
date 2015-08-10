@@ -21,9 +21,7 @@ import javax.jms.Session;
 
 import org.apache.log4j.Logger;
 
-import com.tnt.axway.Author;
-
-public class ProducerWithouListener extends JMSClient<Author> implements
+public class ProducerWithouListener extends JMSClient implements
 		ExceptionListener, Runnable {
 
 	private final static Logger LOG = Logger
@@ -60,7 +58,7 @@ public class ProducerWithouListener extends JMSClient<Author> implements
 		final MessageConsumer receiver = getConsumer(destination,
 				correlationID == null ? null : "JMSCorrelationID='"
 						+ correlationID + "'");
-		final Message message = receiver.receive(2000);
+		final Message message = receiver.receive(3000);
 		if (message instanceof ObjectMessage) {
 			final ObjectMessage object = (ObjectMessage) message;
 			try {
@@ -74,7 +72,7 @@ public class ProducerWithouListener extends JMSClient<Author> implements
 	}
 
 	@Override
-	public String sendMessage(final Author object) throws JMSException {
+	public String sendMessage(final String object) throws JMSException {
 		getConnection().setExceptionListener(this);
 		final Destination destination = session.createQueue(IN_QUEUE);
 		final Message message = session.createObjectMessage(object);
@@ -82,8 +80,7 @@ public class ProducerWithouListener extends JMSClient<Author> implements
 
 		final MessageProducer producer = session.createProducer(destination);
 		producer.send(message);
-
-		LOG.info("Message sent: " + object.getName() + ", correlationID:"
+		LOG.info("Message sent: " + object + ", correlationID:"
 				+ message.getJMSCorrelationID());
 		return message.getJMSCorrelationID();
 	}
@@ -103,9 +100,8 @@ public class ProducerWithouListener extends JMSClient<Author> implements
 	}
 
 	public void run() {
-		final Author author = new Author("author_Thread1");
 		try {
-			String correlationID = sendMessage(author);
+			String correlationID = sendMessage("author_Thread1");
 			receiveMessage(correlationID);
 		} catch (final JMSException e) {
 			LOG.error(e.getMessage(), e);
@@ -115,8 +111,8 @@ public class ProducerWithouListener extends JMSClient<Author> implements
 	public static void main(String[] args) throws JMSException {
 		final ProducerWithouListener producer = new ProducerWithouListener();
 		producer.setUp();
-		final Author author = new Author("author_111");
-		String correlationID = producer.sendMessage(author);
+		final String objectToSend="author_Of message";
+		String correlationID = producer.sendMessage(objectToSend);
 		producer.receiveMessage(correlationID);
 		producer.shutDown();
 	}

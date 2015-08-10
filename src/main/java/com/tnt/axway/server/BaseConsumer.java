@@ -8,14 +8,12 @@
  */
 package com.tnt.axway.server;
 
-import java.io.Serializable;
-
 import javax.jms.Connection;
 import javax.jms.JMSException;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
 
-public abstract class BaseConsumer<T extends Serializable>  {
+public abstract class BaseConsumer  {
 
 	private Connection connection;
 	protected String url = "tcp://127.0.0.1:61616";
@@ -29,7 +27,7 @@ public abstract class BaseConsumer<T extends Serializable>  {
 	public BaseConsumer() {
 	}
 
-	abstract public String sendMessage(final T object) throws JMSException;
+	abstract public String sendMessage(final String object) throws JMSException;
 
 	abstract public void receiveMessage(final String correlationID) throws JMSException;
 
