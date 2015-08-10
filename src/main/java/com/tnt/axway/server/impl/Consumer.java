@@ -39,7 +39,7 @@ public class Consumer extends BaseConsumer implements MessageListener,
 
 	public void setUp() throws JMSException {
 		session = getConnection()
-				.createSession(false, Session.AUTO_ACKNOWLEDGE);
+				.createSession(true, Session.AUTO_ACKNOWLEDGE);
 	}
 
 	@Override
@@ -66,6 +66,7 @@ public class Consumer extends BaseConsumer implements MessageListener,
 				LOG.info("Content received: " + object.getObject().toString());
 				final Message response = session.createObjectMessage("OK");
 				response.setJMSCorrelationID(message.getJMSCorrelationID());
+				session.commit();
 				reply(response);
 			} catch (final JMSException e) {
 				LOG.error(e.getMessage(), e);
@@ -78,6 +79,7 @@ public class Consumer extends BaseConsumer implements MessageListener,
 		final MessageProducer replyProducer = session
 				.createProducer(replyQueue);
 		replyProducer.send(response);
+		session.commit();
 		LOG.info("Response sent:" + response.getJMSCorrelationID());
 	}
 

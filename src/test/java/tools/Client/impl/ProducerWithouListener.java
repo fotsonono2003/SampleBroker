@@ -40,7 +40,7 @@ public class ProducerWithouListener extends JMSClient implements
 	public void setUp() throws JMSException {
 		getConnection().start();
 		session = getConnection()
-				.createSession(false, Session.AUTO_ACKNOWLEDGE);
+				.createSession(true, Session.AUTO_ACKNOWLEDGE);
 	}
 
 	private MessageConsumer getConsumer(final Destination destination,
@@ -68,7 +68,7 @@ public class ProducerWithouListener extends JMSClient implements
 				LOG.error(e.getMessage(), e);
 			}
 		}
-
+		session.commit();
 	}
 
 	@Override
@@ -80,6 +80,7 @@ public class ProducerWithouListener extends JMSClient implements
 
 		final MessageProducer producer = session.createProducer(destination);
 		producer.send(message);
+		session.commit();
 		LOG.info("Message sent: " + object + ", correlationID:"
 				+ message.getJMSCorrelationID());
 		return message.getJMSCorrelationID();
