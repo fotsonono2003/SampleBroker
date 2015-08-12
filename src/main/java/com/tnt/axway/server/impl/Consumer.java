@@ -85,6 +85,11 @@ public class Consumer extends BaseConsumer implements MessageListener,
 
 	public void onException(final JMSException exception) {
 		LOG.error(exception.getMessage(), exception);
+		try {
+			session.rollback();
+		} catch (final JMSException e) {
+			LOG.error(e.getMessage(), e);
+		}
 	}
 
 	public static void main(String[] args) throws JMSException {
