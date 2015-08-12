@@ -32,11 +32,13 @@ public class EmbeddedBrokerService implements Server {
 			broker.addConnector(connector);
 			broker.setDataDirectoryFile(dataDirectory);
 			broker.setBrokerName("Track_Trace");
+			/*set to false to disable persistence of messages*/
+			broker.setPersistent(false);
 			broker.start();
 			LOG.info("Server start");
 
-			consumer.setUp();
-			consumer.receiveMessage(null);
+//			consumer.setUp();
+//			consumer.receiveMessage(null);
 		} catch (final Exception e) {
 			LOG.error(e.getMessage(), e);
 			throw new RuntimeException(e);
